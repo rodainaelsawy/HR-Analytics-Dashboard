@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import KPICard from './KPICard';
+import FirstYearAttrition from './FirstYearAttrition';
 import type { FilterState } from '../types';
 
 type WorkforceStabilityProps = {
@@ -286,6 +287,58 @@ export default function WorkforceStability({ filters }: WorkforceStabilityProps)
               <span className="text-sm text-gray-600">Turnover %</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      <FirstYearAttrition filters={filters} />
+
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Department Breakdown</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Department</th>
+                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700">Headcount</th>
+                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700">Attrition</th>
+                <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700">Vacancies</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-gray-100 hover:bg-gray-50">
+                <td className="py-3 px-4 text-sm text-gray-900">Engineering</td>
+                <td className="py-3 px-4 text-sm text-gray-900 text-right">142</td>
+                <td className="py-3 px-4 text-sm text-right">
+                  <span className="text-green-600">8.2%</span>
+                </td>
+                <td className="py-3 px-4 text-sm text-gray-900 text-right">5</td>
+              </tr>
+              <tr className="border-b border-gray-100 hover:bg-gray-50">
+                <td className="py-3 px-4 text-sm text-gray-900">Sales</td>
+                <td className="py-3 px-4 text-sm text-gray-900 text-right">86</td>
+                <td className="py-3 px-4 text-sm text-right">
+                  <span className="text-yellow-600">12.4%</span>
+                </td>
+                <td className="py-3 px-4 text-sm text-gray-900 text-right">8</td>
+              </tr>
+              <tr className="border-b border-gray-100 hover:bg-gray-50">
+                <td className="py-3 px-4 text-sm text-gray-900">Marketing</td>
+                <td className="py-3 px-4 text-sm text-gray-900 text-right">52</td>
+                <td className="py-3 px-4 text-sm text-right">
+                  <span className="text-green-600">9.1%</span>
+                </td>
+                <td className="py-3 px-4 text-sm text-gray-900 text-right">2</td>
+              </tr>
+              <tr className="border-b border-gray-100 hover:bg-gray-50">
+                <td className="py-3 px-4 text-sm text-gray-900">Operations</td>
+                <td className="py-3 px-4 text-sm text-gray-900 text-right">38</td>
+                <td className="py-3 px-4 text-sm text-right">
+                  <span className="text-red-600">15.2%</span>
+                </td>
+                <td className="py-3 px-4 text-sm text-gray-900 text-right">4</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

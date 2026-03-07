@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import BurnoutDetection from './BurnoutDetection';
+import HighPotentialIdentification from './HighPotentialIdentification';
 import type { FilterState } from '../types';
 
 type PerformanceIntelligenceProps = {
@@ -99,11 +102,7 @@ export default function PerformanceIntelligence({ filters }: PerformanceIntellig
   const lowPerformersPct = totalCount > 0 ? (distribution[0].count / totalCount) * 100 : 0;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900">Performance Intelligence</h2>
-        <p className="text-gray-600 mt-1">Employee performance distribution and trends across review cycles</p>
-      </div>
+    <div className="space-y-8">
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -250,6 +249,10 @@ export default function PerformanceIntelligence({ filters }: PerformanceIntellig
           <div className="text-xs text-blue-700 mt-1">Performance improvement per training dollar invested</div>
         </div>
       </div>
+
+      <BurnoutDetection filters={filters} />
+
+      <HighPotentialIdentification filters={filters} />
     </div>
   );
 }
