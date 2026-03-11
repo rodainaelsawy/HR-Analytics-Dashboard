@@ -10,7 +10,7 @@ type SnapshotData = {
   diversityScore: number;
   genderBalance: { male: number; female: number; other: number };
   performanceDistribution: number[];
-  firstYearAttrition: number;
+  // firstYearAttrition: number;
 };
 
 export default function TalentHealthSnapshot({ onNavigate }: TalentHealthSnapshotProps) {
@@ -31,9 +31,9 @@ export default function TalentHealthSnapshot({ onNavigate }: TalentHealthSnapsho
         .from('performance_reviews')
         .select('rating');
 
-      const { data: cohorts } = await supabase
-        .from('cohort_tracking')
-        .select('*, employee:employees!inner(status, hire_date, termination_date)');
+      // const { data: cohorts } = await supabase
+      //   .from('cohort_tracking')
+      //   .select('*, employee:employees!inner(status, hire_date, termination_date)');
 
       if (!employees) return;
 
@@ -54,24 +54,24 @@ export default function TalentHealthSnapshot({ onNavigate }: TalentHealthSnapsho
         ratings.filter(r => r >= 4 && r <= 5).length
       ];
 
-      const firstYearEmployees = cohorts?.filter(c => {
-        const hireDate = new Date(c.employee.hire_date);
-        const oneYearLater = new Date(hireDate);
-        oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
-        return oneYearLater <= new Date();
-      }) || [];
+      // const firstYearEmployees = cohorts?.filter(c => {
+      //   const hireDate = new Date(c.employee.hire_date);
+      //   const oneYearLater = new Date(hireDate);
+      //   oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+      //   return oneYearLater <= new Date();
+      // }) || [];
 
-      const firstYearAttrited = firstYearEmployees.filter(c => {
-        if (!c.employee.termination_date) return false;
-        const hireDate = new Date(c.employee.hire_date);
-        const termDate = new Date(c.employee.termination_date);
-        const daysDiff = (termDate.getTime() - hireDate.getTime()) / (1000 * 60 * 60 * 24);
-        return daysDiff <= 365;
-      }).length;
+      // const firstYearAttrited = firstYearEmployees.filter(c => {
+      //   if (!c.employee.termination_date) return false;
+      //   const hireDate = new Date(c.employee.hire_date);
+      //   const termDate = new Date(c.employee.termination_date);
+      //   const daysDiff = (termDate.getTime() - hireDate.getTime()) / (1000 * 60 * 60 * 24);
+      //   return daysDiff <= 365;
+      // }).length;
 
-      const firstYearAttrition = firstYearEmployees.length > 0
-        ? (firstYearAttrited / firstYearEmployees.length) * 100
-        : 0;
+      // const firstYearAttrition = firstYearEmployees.length > 0
+      //   ? (firstYearAttrited / firstYearEmployees.length) * 100
+      //   : 0;
 
       const minorityCount = activeEmployees.filter(
         e => e.ethnicity !== 'White' || e.gender !== 'Male'
@@ -82,7 +82,7 @@ export default function TalentHealthSnapshot({ onNavigate }: TalentHealthSnapsho
         diversityScore,
         genderBalance,
         performanceDistribution,
-        firstYearAttrition
+        // firstYearAttrition
       });
     } catch (error) {
       console.error('Error fetching talent health data:', error);
@@ -210,11 +210,11 @@ export default function TalentHealthSnapshot({ onNavigate }: TalentHealthSnapsho
                   stroke="#EF4444"
                   strokeWidth="12"
                   fill="none"
-                  strokeDasharray={`${(data.firstYearAttrition / 100) * 351.86} 351.86`}
+                  // strokeDasharray={`${(data.firstYearAttrition / 100) * 351.86} 351.86`}
                 />
               </svg>
               <div className="absolute text-center">
-                <div className="text-2xl font-bold text-gray-900">{data.firstYearAttrition.toFixed(1)}%</div>
+                {/* <div className="text-2xl font-bold text-gray-900">{data.firstYearAttrition.toFixed(1)}%</div> */}
               </div>
             </div>
             <div className="pt-3 border-t border-gray-200">

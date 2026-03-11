@@ -28,6 +28,7 @@ export default function DiversityPayEquity({ filters }: DiversityPayEquityProps)
   const [payEquityData, setPayEquityData] = useState<PayEquityData[]>([]);
   const [payGap, setPayGap] = useState<number>(0);
   const [loading, setLoading] = useState(true);
+  const [totalGenderRatio, setTotalGenderRatio] = useState<DiversityData>();
 
   useEffect(() => {
     fetchDiversityData();
@@ -35,14 +36,23 @@ export default function DiversityPayEquity({ filters }: DiversityPayEquityProps)
 
   async function fetchDiversityData() {
     try {
-      const { data: employees } = await supabase
+      const employee_count = (await supabase.from('employees').select('first_name', { count: 'exact', head: true }).eq('status', 'Active')).count;
+      if(!employee_count) return;
+      const range = Math.ceil(employee_count/500)
+      const employees = []
+      for (let index = 0; index < range; index++) {
+      const { data: fraction } = await supabase
         .from('employees')
         .select('*, departments(name)')
-        .eq('status', 'Active');
+        .eq('status', 'Active')
+        .range(index * 500, (index + 1)*500 - 1);
+        employees.push(...(fraction ?? []));
+      }
 
       if (!employees) return;
 
       const deptMap = new Map<string, { male: number; female: number; other: number }>();
+      const overallStats: DiversityData = { department: "Overall", male: 0, female: 0, other: 0 }
 
       employees.forEach(emp => {
         const deptName = emp.departments?.name || 'Unknown';
@@ -50,10 +60,18 @@ export default function DiversityPayEquity({ filters }: DiversityPayEquityProps)
           deptMap.set(deptName, { male: 0, female: 0, other: 0 });
         }
         const dept = deptMap.get(deptName)!;
-        if (emp.gender === 'Male') dept.male++;
-        else if (emp.gender === 'Female') dept.female++;
-        else dept.other++;
+        if (emp.gender === 'Male') {dept.male++; overallStats.male++}
+        else if (emp.gender === 'Female') {dept.female++; overallStats.female++}
+        else {dept.other++; overallStats.other++}; 
       });
+
+      const maleRatio = overallStats.male/employee_count * 100;
+      const femaleRatio = overallStats.female/employee_count * 100;
+      const otherRatio = overallStats.other/employee_count * 100;
+      overallStats.male = maleRatio;
+      overallStats.female = femaleRatio;
+      overallStats.other = otherRatio;
+      setTotalGenderRatio(overallStats);
 
       const diversity = Array.from(deptMap.entries()).map(([department, counts]) => ({
         department,
@@ -197,15 +215,15 @@ export default function DiversityPayEquity({ filters }: DiversityPayEquityProps)
           <div className="mt-6 pt-4 border-t border-gray-200 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Gender Balance</span>
-              <span className="font-medium">52% / 48%</span>
+              <span className="font-medium">{ totalGenderRatio?.male.toFixed(1) }% / { totalGenderRatio?.female.toFixed(1) }% / { totalGenderRatio?.other.toFixed(1) }%</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Leadership Diversity</span>
-              <span className="font-medium">34%</span>
+              <span className="font-medium">N/A</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">New Hire Diversity</span>
-              <span className="font-medium">47%</span>
+              <span className="font-medium">N/A</span>
             </div>
           </div>
         </div>
