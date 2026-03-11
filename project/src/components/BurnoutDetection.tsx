@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AlertTriangle, TrendingDown } from 'lucide-react';
 import type { FilterState } from '../types';
+import { supabase } from '../lib/supabase';
 
 type BurnoutDetectionProps = {
   filters: FilterState;

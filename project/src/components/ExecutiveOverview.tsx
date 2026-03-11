@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+// import { ArrowRight } from 'lucide-react';
 import KPICard from './KPICard';
 import NavigationTiles from './NavigationTiles';
 import TalentHealthSnapshot from './TalentHealthSnapshot';
 import { supabase } from '../lib/supabase';
 import type { FilterState } from '../types';
+import SparklineChart from './SparklineChart';
 
 type ExecutiveOverviewProps = {
   filters: FilterState;
@@ -110,26 +111,26 @@ export default function ExecutiveOverview({ filters, onNavigate }: ExecutiveOver
           title="Headcount"
           value={kpiData.headcount.toLocaleString()}
           change={kpiData.headcountChange}
-          trend={kpiData.headcountTrend}
+          sparklineData={kpiData.headcountTrend}
         />
         <KPICard
           title="FTE"
           value={kpiData.fte.toFixed(1)}
           change={kpiData.fteChange}
-          trend={kpiData.headcountTrend}
+          // sparklineData={kpiData.headcountTrend}
         />
         <KPICard
           title="Turnover Rate"
           value={`${kpiData.turnoverRate.toFixed(1)}%`}
           change={kpiData.turnoverChange}
-          trend={kpiData.turnoverTrend}
-          inverse
+          sparklineData={kpiData.turnoverTrend}
+          // inverse
         />
         <KPICard
           title="Payroll / Revenue"
           value={`${kpiData.payrollRevenuePercent.toFixed(1)}%`}
           change={kpiData.payrollChange}
-          trend={kpiData.turnoverTrend}
+          // sparklineData={kpiData.turnoverTrend}
         />
       </div>
 
@@ -153,7 +154,7 @@ export default function ExecutiveOverview({ filters, onNavigate }: ExecutiveOver
             <div>
               <h3 className="text-sm font-medium text-gray-700 mb-4">Headcount vs FTE Over Time</h3>
               <div className="h-48 flex items-end gap-2">
-                {kpiData.headcountTrend.map((value, i) => (
+                {/* {kpiData.headcountTrend.map((value, i) => (
                   <div key={i} className="flex-1 flex flex-col gap-1">
                     <div
                       className="bg-blue-500 rounded-t"
@@ -164,7 +165,8 @@ export default function ExecutiveOverview({ filters, onNavigate }: ExecutiveOver
                       style={{ height: `${((value * 0.9) / Math.max(...kpiData.headcountTrend)) * 100}%` }}
                     />
                   </div>
-                ))}
+                ))} */}
+                <SparklineChart data={kpiData.headcountTrend} />
               </div>
               <div className="flex justify-between mt-2 text-xs text-gray-500">
                 <span>9 months ago</span>
@@ -174,14 +176,15 @@ export default function ExecutiveOverview({ filters, onNavigate }: ExecutiveOver
             <div>
               <h3 className="text-sm font-medium text-gray-700 mb-4">Turnover Count & Rate</h3>
               <div className="h-48 flex items-end gap-2">
-                {kpiData.turnoverTrend.map((value, i) => (
+                {/* {kpiData.turnoverTrend.map((value, i) => (
                   <div key={i} className="flex-1">
                     <div
                       className="bg-red-400 rounded-t"
                       style={{ height: `${(value / Math.max(...kpiData.turnoverTrend)) * 100}%` }}
                     />
                   </div>
-                ))}
+                ))} */}
+                <SparklineChart data={kpiData.turnoverTrend} />
               </div>
               <div className="flex justify-between mt-2 text-xs text-gray-500">
                 <span>9 months ago</span>
